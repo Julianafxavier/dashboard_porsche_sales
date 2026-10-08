@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Porsche | Sales Intelligence</title>
+<style>
+  :root{
+    --black:#050505; --ink:#121212; --muted:#6f6f6f; --line:#dedede;
+    --soft:#f4f4f2; --white:#fff; --accent:#d5001c; --accent2:#8f0013;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#fff;color:var(--ink);font-family:Arial,Helvetica,sans-serif}
+  .shell{min-height:100vh;background:linear-gradient(180deg,#fff 0%,#f7f7f5 100%)}
+  header{background:#050505;color:#fff;padding:24px 42px 30px;border-bottom:1px solid #292929}
+  .topline{display:flex;align-items:center;justify-content:space-between;gap:20px}
+  .wordmark{font-weight:700;letter-spacing:.30em;font-size:19px}
+  .eyebrow{font-size:10px;letter-spacing:.20em;text-transform:uppercase;color:#bdbdbd}
+  .hero{max-width:1420px;margin:0 auto;min-height:430px;padding:70px 42px 46px;position:relative;display:flex;flex-direction:column;justify-content:flex-end;overflow:hidden;background-image:linear-gradient(90deg,rgba(0,0,0,.72) 0%,rgba(0,0,0,.38) 52%,rgba(0,0,0,.12) 100%),url('https://a.storyblok.com/f/322327/3840x1266/cd758f4c72/cz26w03ox0004-carrera-s-desktop.jpg/m/2560x822/smart/filters%3Aformat%28webp%29');background-size:cover;background-position:center;}
+  .hero:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.42),transparent 55%);pointer-events:none}
+  .hero-credit{position:absolute;right:20px;bottom:12px;z-index:2;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.72)}
+  h1{font-size:42px;line-height:1.02;margin:5px 0 12px;letter-spacing:-.04em;font-weight:500}
+  .hero .eyebrow,.hero h1,.hero .lede{position:relative;z-index:1}.hero .eyebrow{color:#cfcfcf}.hero h1{color:#fff}.hero .lede{color:#e4e4e4}
+  .filters{max-width:1420px;margin:22px auto 0;padding:0 42px}
+  .filterbar{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;background:#fff;border:1px solid #ddd;padding:10px}
+  label{display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#777;margin:2px 0 7px}
+  select{width:100%;border:0;border-bottom:1px solid #aaa;background:#fff;padding:10px 2px;font-size:14px;color:#111;outline:none}
+  select:focus{border-color:#000}
+  .content{max-width:1420px;margin:0 auto;padding:18px 42px 54px}
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:0 0 14px}
+  .kpi{background:#fff;border:1px solid #ddd;padding:19px 20px;min-height:112px}
+  .kpi .label{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#777}
+  .kpi .value{font-size:30px;letter-spacing:-.03em;margin-top:12px;font-weight:500}
+  .kpi .sub{font-size:12px;color:#777;margin-top:7px}
+  .grid{display:grid;grid-template-columns:1.3fr .7fr;gap:14px;margin-bottom:14px}
+  .card{background:#fff;border:1px solid #ddd;padding:20px}
+  .cardhead{display:flex;justify-content:space-between;align-items:flex-start;gap:18px;margin-bottom:15px}
+  .title{font-size:17px;font-weight:500;letter-spacing:-.02em}
+  .subtitle{font-size:12px;color:#777;line-height:1.5;margin-top:5px}
+  .tag{font-size:9px;letter-spacing:.12em;text-transform:uppercase;border:1px solid #ddd;padding:7px 8px;color:#666;white-space:nowrap}
+  .bars{display:flex;flex-direction:column;gap:10px}
+  .barrow{display:grid;grid-template-columns:150px 1fr 34px;gap:10px;align-items:center;font-size:12px}
+  .chart-canvas{width:100%;height:360px;display:block}
+  .state-chart{height:400px}
+  .canvas-wrap{position:relative;width:100%}
+  .barlabel{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .track{height:8px;background:#ededeb;overflow:hidden}
+  .fill{height:100%;background:#111}
+  .fill.red{background:var(--accent)}
+  .num{text-align:right;font-variant-numeric:tabular-nums;color:#555}
+  .insights{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .insight{padding:19px;background:#101010;color:#fff;min-height:158px;position:relative;overflow:hidden}
+  .insight:after{content:"";position:absolute;width:120px;height:120px;border:1px solid rgba(255,255,255,.12);border-radius:50%;right:-50px;top:-55px}
+  .insight .k{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:#aaa}
+  .insight h3{font-size:20px;font-weight:500;margin:11px 0 8px;max-width:300px}
+  .insight p{font-size:12px;line-height:1.55;color:#c9c9c9;margin:0;max-width:360px}
+  .citytable{width:100%;border-collapse:collapse;font-size:12px}
+  .citytable th{font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:#777;text-align:left;padding:9px 6px;border-bottom:1px solid #ddd}
+  .citytable td{padding:10px 6px;border-bottom:1px solid #eee}
+  .citytable td:last-child,.citytable th:last-child{text-align:right}
+  .pill{display:inline-block;border:1px solid #ddd;padding:3px 7px;font-size:10px}
+  .empty{padding:28px 10px;text-align:center;color:#777;font-size:13px}
+  .foot{max-width:1420px;margin:0 auto;padding:0 42px 28px;color:#777;font-size:10px;line-height:1.6}
+  .evo{position:relative}
+  .evo-meta{display:flex;gap:24px;align-items:flex-end;margin-bottom:10px}
+  .evo-total{font-size:26px;letter-spacing:-.03em}
+  .evo-delta{font-size:11px;color:#777;padding-bottom:4px}
+  .evo-wrap{border-top:1px solid #eee;padding-top:8px}
+  .evo-svg{width:100%;height:280px;display:block;overflow:visible}
+  .evo-grid{stroke:#e7e7e5;stroke-width:1}
+  .evo-axis{fill:#777;font-size:10px}
+  .evo-line{fill:none;stroke:#111;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
+  .evo-area{fill:rgba(0,0,0,.055);stroke:none}
+  .evo-point{fill:#d5001c;stroke:#fff;stroke-width:2}
+  .evo-note{font-size:10px;color:#777;margin-top:8px}
+  .quality{border-left:2px solid var(--accent);padding:10px 12px;background:#fff;margin-top:14px;font-size:11px;color:#666}
+  @media(max-width:900px){
+    .filterbar,.kpis,.insights{grid-template-columns:1fr 1fr}
+    .grid{grid-template-columns:1fr}
+  }
+  @media(max-width:600px){
+    header{padding:20px}
+    .hero,.filters,.content,.foot{padding-left:20px;padding-right:20px}
+    .filterbar,.kpis,.insights{grid-template-columns:1fr}
+    h1{font-size:34px}
+  }
+</style>
+</head>
+<body>
+<div class="shell">
+<header>
+  <div class="topline">
+    <div class="wordmark">PORSCHE</div>
+    <div class="eyebrow">Sales Intelligence · Brasil</div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="eyebrow" style="color:#777">Performance comercial</div>
+  <h1>O pulso das vendas.</h1>
+  <p class="lede">Uma leitura executiva dos modelos Porsche mais vendidos, comportamento por cidade e ano de modelo — com filtros para explorar a base de forma objetiva.</p>
+  <div class="hero-credit">Imagem: Porsche 911 Carrera S · Porsche Brasil</div>
+</section>
+
+<section class="filters">
+  <div class="filterbar">
+    <div><label>Modelo da Porsche</label><select id="model"></select></div>
+    <div><label>Model year</label><select id="year"></select></div>
+    <div><label>City</label><select id="city"></select></div>
+    <div><label>Pay Method</label><select id="pay"></select></div>
+  </div>
+</section>
+
+<main class="content">
+  <section class="kpis">
+    <div class="kpi"><div class="label">Vendas filtradas</div><div class="value" id="kpiSales">—</div><div class="sub" id="kpiSalesSub">—</div></div>
+    <div class="kpi"><div class="label">Modelo líder</div><div class="value" id="kpiModel">—</div><div class="sub" id="kpiModelSub">—</div></div>
+    <div class="kpi"><div class="label">Model year líder</div><div class="value" id="kpiYear">—</div><div class="sub" id="kpiYearSub">—</div></div>
+    <div class="kpi"><div class="label">Ticket médio</div><div class="value" id="kpiTicket">—</div><div class="sub">preço de venda na base</div></div>
+  </section>
+
+  <section class="grid">
+    <div class="card">
+      <div class="cardhead">
+        <div><div class="title">Quais modelos mais saem por cidade?</div><div class="subtitle">Top cidades por volume e o modelo dominante em cada uma.</div></div>
+        <div class="tag">Top 8 cidades</div>
+      </div>
+      <div id="cityTable"></div>
+    </div>
+    <div class="card">
+      <div class="cardhead">
+        <div><div class="title">Mix de modelos</div><div class="subtitle">Ranking de unidades vendidas no recorte atual.</div></div>
+        <div class="tag">Unidades</div>
+      </div>
+      <canvas id="modelCanvas" class="chart-canvas" aria-label="Mix de modelos"></canvas>
+    </div>
+  </section>
+
+  <section class="grid">
+    <div class="card">
+      <div class="cardhead">
+        <div><div class="title">Qual ano de modelo mais saiu?</div><div class="subtitle">Distribuição por Model Year para o recorte selecionado.</div></div>
+        <div class="tag">Model year</div>
+      </div>
+      <canvas id="yearCanvas" class="chart-canvas" aria-label="Vendas por Model Year"></canvas>
+    </div>
+    <div class="card">
+      <div class="cardhead">
+        <div><div class="title">Meio de pagamento</div><div class="subtitle">Como os clientes concluíram a compra.</div></div>
+        <div class="tag">Mix</div>
+      </div>
+      <canvas id="payCanvas" class="chart-canvas" aria-label="Vendas por Pay Method"></canvas>
+    </div>
+  </section>
+
+  <section class="card" style="margin-bottom:14px">
+    <div class="cardhead">
+      <div>
+        <div class="title">Vendas por State</div>
+        <div class="subtitle">Ranking de vendas por estado no recorte atual, destacando onde a operação tem maior concentração.</div>
+      </div>
+      <div class="tag">Estados</div>
+    </div>
+    <canvas id="stateCanvas" class="chart-canvas state-chart" aria-label="Vendas por State"></canvas>
+  </section>
+
+  <section class="insights">
+    <div class="insight"><div class="k">Insight 01 · Cidade</div><h3 id="ins1Title">—</h3><p id="ins1Text">—</p></div>
+    <div class="insight"><div class="k">Insight 02 · Produto</div><h3 id="ins2Title">—</h3><p id="ins2Text">—</p></div>
+    <div class="insight"><div class="k">Insight 03 · Ano</div><h3 id="ins3Title">—</h3><p id="ins3Text">—</p></div>
+  </section>
+
+  <div class="quality" id="quality"></div>
+</main>
+
+<div class="foot">
+  Fonte: planilha “Desafio de projeto - planilha base Porsche (sanitizada)”. O visual foi inspirado na linguagem editorial e de contraste observada no Porsche Brasil, especialmente na organização por famílias de modelos e filtros de produto.
+</div>
+</div>
+
+<script>
+const DATA = [{"model": "718 Cayman", "year": 2022, "city": "Boston", "pay": "Credit Card", "date": null, "price": 79500.0, "state": "MA"}, {"model": "911 Turbo S", "year": 2024, "city": "Seattle", "pay": "Wire Transfer", "date": "2024-03-14", "price": 235000.0, "state": "WA"}, {"model": "Cayenne Coupe", "year": 2023, "city": "Austin", "pay": "Financing", "date": "2024-04-18", "price": 112750.0, "state": "TX"}, {"model": "Macan S", "year": 2021, "city": "Denver", "pay": "Cash", "date": null, "price": 68900.0, "state": "CO"}, {"model": "Taycan 4S", "year": 2024, "city": "Los Angeles", "pay": "Bank Transfer", "date": "2024-05-22", "price": 121000.0, "state": "CA"}, {"model": "Panamera 4", "year": 2023, "city": "Miami", "pay": "Credit Card", "date": "2024-08-06", "price": 104500.0, "state": "FL"}, {"model": "911 Carrera S", "year": 2020, "city": "New York", "pay": "Lease", "date": "2024-07-11", "price": 96300.0, "state": "NY"}, {"model": "Cayenne E-Hybrid", "year": 2022, "city": "San Diego", "pay": "Wire Transfer", "date": null, "price": 89750.0, "state": "CA"}, {"model": "718 Boxster", "year": 2021, "city": "Chicago", "pay": "Debit Card", "date": "2024-08-19", "price": 73500.0, "state": "IL"}, {"model": "Macan GTS", "year": 2024, "city": "Phoenix", "pay": "Financing", "date": "2024-09-02", "price": 95000.0, "state": "AZ"}, {"model": "Taycan Turbo", "year": 2023, "city": "Dallas", "pay": "ACH Payment", "date": "2024-09-17", "price": 153200.5, "state": "TX"}, {"model": "911 GT3", "year": 2024, "city": "Las Vegas", "pay": "Wire Transfer", "date": null, "price": 241000.0, "state": "NV"}, {"model": "Panamera Turbo S", "year": 2022, "city": "San Jose", "pay": "Cash", "date": "2024-05-11", "price": 132000.0, "state": "CA"}, {"model": "Cayenne Turbo GT", "year": 2024, "city": "Houston", "pay": "Crypto Payment", "date": "2024-12-12", "price": 188000.0, "state": "TX"}, {"model": "911 Carrera Cabriolet", "year": 2023, "city": "Atlanta", "pay": "Credit Card", "date": "2024-12-25", "price": 127800.0, "state": "GA"}, {"model": "Macan", "year": 2021, "city": "Orlando", "pay": "Bank Transfer", "date": "2025-01-06", "price": 58900.0, "state": "FL"}, {"model": "718 Spyder RS", "year": 2024, "city": "Portland", "pay": "Financing", "date": null, "price": 164000.0, "state": "OR"}, {"model": "Taycan Cross Turismo", "year": 2023, "city": "Charlotte", "pay": "Wire Transfer", "date": "2025-02-14", "price": 118500.0, "state": "NC"}, {"model": "Cayenne S", "year": 2022, "city": "Nashville", "pay": "Credit Card", "date": null, "price": 91300.0, "state": "TN"}, {"model": "911 Targa 4S", "year": 2024, "city": "Minneapolis", "pay": "Lease", "date": "2025-03-21", "price": 158750.0, "state": "MN"}, {"model": "Panamera", "year": 2020, "city": "Philadelphia", "pay": "Bank Transfer", "date": "2025-03-28", "price": 72000.0, "state": "PA"}, {"model": "Macan Electric", "year": 2025, "city": "San Antonio", "pay": "Wire Transfer", "date": "2025-04-09", "price": 86500.0, "state": "TX"}, {"model": "911 Dakar", "year": 2024, "city": "Salt Lake City", "pay": "Cash", "date": null, "price": 270000.0, "state": "UT"}, {"model": "Taycan GTS", "year": 2023, "city": "Raleigh", "pay": "Financing", "date": "2025-05-12", "price": 139000.0, "state": "NC"}, {"model": "Cayenne", "year": 2021, "city": "Detroit", "pay": "Credit Card", "date": "2025-06-18", "price": 76800.0, "state": "MI"}, {"model": "718 Cayman GT4 RS", "year": 2024, "city": "Columbus", "pay": "Wire Transfer", "date": null, "price": 173600.0, "state": "OH"}, {"model": "911 Carrera GTS", "year": 2022, "city": "Indianapolis", "pay": "Cash", "date": "2025-07-07", "price": 119900.0, "state": "IN"}, {"model": "Panamera 4 E-Hybrid", "year": 2023, "city": "Fort Worth", "pay": "Lease", "date": "2025-07-22", "price": 109250.0, "state": "TX"}, {"model": "Macan T", "year": 2022, "city": "Jacksonville", "pay": "Wire Transfer", "date": "2025-08-14", "price": 82000.0, "state": "FL"}, {"model": "Taycan Turbo S", "year": 2025, "city": "San Diego", "pay": "Crypto Payment", "date": "2025-09-01", "price": 214000.0, "state": "CA"}, {"model": "911 Carrera", "year": 2024, "city": "Tampa", "pay": "Credit Card", "date": null, "price": 124500.0, "state": "FL"}, {"model": "Cayenne S", "year": 2023, "city": "Sacramento", "pay": "Bank Transfer", "date": "2025-09-18", "price": 98200.0, "state": "CA"}, {"model": "Macan", "year": 2022, "city": "Cleveland", "pay": "Financing", "date": "2025-10-04", "price": 67500.0, "state": "OH"}, {"model": "Taycan", "year": 2025, "city": "Milwaukee", "pay": "Wire Transfer", "date": "2025-10-12", "price": 116900.0, "state": "WI"}, {"model": "Panamera 4S", "year": 2024, "city": "Kansas City", "pay": "Cash", "date": "2025-10-29", "price": 112000.0, "state": "MO"}, {"model": "718 Boxster", "year": 2021, "city": "Omaha", "pay": "Debit Card", "date": "2025-02-11", "price": 74000.0, "state": "NE"}, {"model": "911 Turbo", "year": 2024, "city": "Albuquerque", "pay": "Wire Transfer", "date": "2025-11-16", "price": 198300.0, "state": "NM"}, {"model": "Cayenne Coupe", "year": 2023, "city": "Tucson", "pay": "Wire Transfer", "date": null, "price": 103750.0, "state": "AZ"}, {"model": "Macan GTS", "year": 2024, "city": "Fresno", "pay": "Financing", "date": null, "price": 93600.0, "state": "CA"}, {"model": "Taycan 4S", "year": 2025, "city": "Virginia Beach", "pay": "ACH Payment", "date": "2025-12-07", "price": 129000.0, "state": "VA"}, {"model": "Panamera Turbo", "year": 2022, "city": "Colorado Springs", "pay": "Credit Card", "date": "2025-12-22", "price": 136000.0, "state": "CO"}, {"model": "911 GT3 RS", "year": 2024, "city": "Arlington", "pay": "Wire Transfer", "date": null, "price": 286500.0, "state": "TX"}, {"model": "Cayenne E-Hybrid", "year": 2023, "city": "Bakersfield", "pay": "Lease", "date": "2026-01-08", "price": 92800.0, "state": "CA"}, {"model": "Macan T", "year": 2022, "city": "Mesa", "pay": "Cash", "date": "2026-01-15", "price": 72400.0, "state": "AZ"}, {"model": "Taycan Turbo", "year": 2025, "city": "Atlanta", "pay": "Crypto Payment", "date": "2026-01-28", "price": 158500.0, "state": "GA"}, {"model": "718 Cayman", "year": 2021, "city": "Long Beach", "pay": "Bank Transfer", "date": "2026-02-03", "price": 69900.0, "state": "CA"}, {"model": "911 Targa 4", "year": 2024, "city": "Oakland", "pay": "Financing", "date": null, "price": 141250.0, "state": "CA"}, {"model": "Panamera", "year": 2020, "city": "Tulsa", "pay": "Wire Transfer", "date": "2026-02-19", "price": 71500.0, "state": "OK"}, {"model": "Cayenne Turbo", "year": 2023, "city": "Wichita", "pay": "Credit Card", "date": "2026-02-25", "price": 146800.0, "state": "KS"}, {"model": "Macan Electric", "year": 2025, "city": "New Orleans", "pay": "Lease", "date": "2026-03-01", "price": 89700.0, "state": "LA"}, {"model": "911 Carrera S", "year": 2022, "city": "Honolulu", "pay": "Bank Transfer", "date": "2026-03-14", "price": 104600.0, "state": "HI"}, {"model": "Taycan GTS", "year": 2024, "city": "Anaheim", "pay": "Wire Transfer", "date": null, "price": 142000.0, "state": "CA"}, {"model": "Cayenne", "year": 2021, "city": "Henderson", "pay": "Cash", "date": "2026-04-08", "price": 78400.0, "state": "NV"}, {"model": "718 Spyder RS", "year": 2025, "city": "Lexington", "pay": "Financing", "date": null, "price": 169000.0, "state": "KY"}, {"model": "911 Dakar", "year": 2024, "city": "Riverside", "pay": "Credit Card", "date": "2026-04-21", "price": 268900.0, "state": "CA"}, {"model": "Panamera 4", "year": 2023, "city": "Corpus Christi", "pay": "Wire Transfer", "date": "2026-04-29", "price": 101300.0, "state": "TX"}, {"model": "Macan S", "year": 2021, "city": "St. Louis", "pay": "Cash", "date": "2026-05-05", "price": 66750.0, "state": "MO"}, {"model": "Taycan Cross Turismo", "year": 2024, "city": "Pittsburgh", "pay": "Lease", "date": "2026-05-14", "price": 127900.0, "state": "PA"}, {"model": "Cayenne Turbo GT", "year": 2025, "city": "Cincinnati", "pay": "Wire Transfer", "date": "2026-05-23", "price": 200000.0, "state": "OH"}, {"model": "911 Carrera Cabriolet", "year": 2023, "city": "Anchorage", "pay": "Crypto Payment", "date": "2026-06-02", "price": 132000.0, "state": "AK"}, {"model": "718 Cayman GT4 RS", "year": 2024, "city": "Plano", "pay": "Credit Card", "date": "2026-06-15", "price": 176400.0, "state": "TX"}, {"model": "Panamera 4 E-Hybrid", "year": 2022, "city": "Newark", "pay": "Bank Transfer", "date": null, "price": 108500.0, "state": "NJ"}, {"model": "Macan", "year": 2021, "city": "Greensboro", "pay": "Financing", "date": "2026-07-07", "price": 59000.0, "state": "NC"}, {"model": "Taycan Turbo S", "year": 2025, "city": "Lincoln", "pay": "Wire Transfer", "date": "2026-07-20", "price": 218000.0, "state": "NE"}, {"model": "Cayenne S", "year": 2024, "city": "Jersey City", "pay": "Debit Card", "date": null, "price": 99950.0, "state": "NJ"}, {"model": "911 Carrera GTS", "year": 2024, "city": "Chandler", "pay": "Credit Card", "date": "2026-04-08", "price": 121750.0, "state": "AZ"}, {"model": "718 Boxster GTS", "year": 2023, "city": "Reno", "pay": "Lease", "date": "2026-08-18", "price": 91500.0, "state": "NV"}, {"model": "Panamera Turbo S", "year": 2022, "city": "Buffalo", "pay": "Wire Transfer", "date": "2026-08-31", "price": 134000.0, "state": "NY"}, {"model": "Macan GTS", "year": 2024, "city": "Durham", "pay": "ACH Payment", "date": "2026-09-09", "price": 96800.0, "state": "NC"}, {"model": "Taycan 4S", "year": 2025, "city": "Laredo", "pay": "Wire Transfer", "date": "2026-09-17", "price": 131600.0, "state": "TX"}, {"model": "Cayenne E-Hybrid", "year": 2023, "city": "Madison", "pay": "Cash", "date": "2026-09-28", "price": 94300.0, "state": "WI"}, {"model": "911 Turbo S", "year": 2025, "city": "Lubbock", "pay": "Crypto Payment", "date": "2026-10-06", "price": 242000.0, "state": "TX"}, {"model": "718 Cayman S", "year": 2022, "city": "Toledo", "pay": "Credit Card", "date": "2026-10-16", "price": 82750.0, "state": "OH"}, {"model": "Macan Electric", "year": 2026, "city": "Irvine", "pay": "Wire Transfer", "date": "2026-10-29", "price": 91300.0, "state": "CA"}, {"model": "Panamera", "year": 2021, "city": "Garland", "pay": "Financing", "date": "2026-11-03", "price": 79900.0, "state": "TX"}, {"model": "Cayenne Coupe", "year": 2024, "city": "Irving", "pay": "Bank Transfer", "date": null, "price": 111000.0, "state": "TX"}, {"model": "911 Targa 4S", "year": 2023, "city": "Chesapeake", "pay": "Cash", "date": "2026-12-11", "price": 156500.0, "state": "VA"}, {"model": "Taycan", "year": 2025, "city": "Scottsdale", "pay": "Lease", "date": "2026-12-24", "price": 119900.0, "state": "AZ"}, {"model": "Macan T", "year": 2022, "city": "Norfolk", "pay": "Wire Transfer", "date": null, "price": 73200.0, "state": "VA"}, {"model": "911 GT3", "year": 2024, "city": "Boise", "pay": "Wire Transfer", "date": "2026-12-28", "price": 224000.0, "state": "ID"}, {"model": "911 Carrera", "year": 2024, "city": "Orlando", "pay": "Credit Card", "date": "2027-01-15", "price": 126900.0, "state": "FL"}, {"model": "Cayenne", "year": 2023, "city": "San Jose", "pay": "Bank Transfer", "date": "2027-01-29", "price": 84500.0, "state": "CA"}, {"model": "Macan S", "year": 2022, "city": "Tampa", "pay": "Financing", "date": "2027-02-11", "price": 69800.0, "state": "FL"}, {"model": "Taycan 4S", "year": 2025, "city": "Denver", "pay": "Wire Transfer", "date": null, "price": 132700.0, "state": "CO"}, {"model": "Panamera", "year": 2021, "city": "Austin", "pay": "Cash", "date": "2027-03-05", "price": 81000.0, "state": "TX"}, {"model": "718 Cayman", "year": 2023, "city": "Seattle", "pay": "Debit Card", "date": "2027-03-18", "price": 78900.0, "state": "WA"}, {"model": "911 Turbo S", "year": 2026, "city": "Boston", "pay": "Wire Transfer", "date": "2027-04-02", "price": 249300.0, "state": "MA"}, {"model": "Cayenne Coupe", "year": 2024, "city": "Phoenix", "pay": "Wire Transfer", "date": null, "price": 108750.0, "state": "AZ"}, {"model": "Macan Electric", "year": 2026, "city": "Chicago", "pay": "Financing", "date": null, "price": 92600.0, "state": "IL"}, {"model": "Taycan Turbo", "year": 2025, "city": "Dallas", "pay": "ACH Payment", "date": "2027-05-12", "price": 164000.0, "state": "TX"}, {"model": "Panamera 4S", "year": 2024, "city": "San Francisco", "pay": "Credit Card", "date": "2027-05-27", "price": 119000.0, "state": "CA"}, {"model": "911 GT3", "year": 2026, "city": "Las Vegas", "pay": "Wire Transfer", "date": null, "price": 232500.0, "state": "NV"}, {"model": "Cayenne E-Hybrid", "year": 2023, "city": "Charlotte", "pay": "Lease", "date": "2027-06-18", "price": 96800.0, "state": "NC"}, {"model": "Macan T", "year": 2022, "city": "Mesa", "pay": "Cash", "date": "2027-07-03", "price": 74400.0, "state": "AZ"}, {"model": "Taycan GTS", "year": 2025, "city": "Atlanta", "pay": "Crypto Payment", "date": "2027-07-22", "price": 148500.0, "state": "GA"}, {"model": "718 Boxster", "year": 2021, "city": "Long Beach", "pay": "Bank Transfer", "date": "2027-08-08", "price": 71900.0, "state": "CA"}, {"model": "911 Targa 4", "year": 2024, "city": "Oakland", "pay": "Financing", "date": null, "price": 143250.0, "state": "CA"}, {"model": "Panamera Turbo", "year": 2020, "city": "Tulsa", "pay": "Wire Transfer", "date": "2027-09-19", "price": 137500.0, "state": "OK"}, {"model": "Cayenne Turbo GT", "year": 2025, "city": "Wichita", "pay": "Credit Card", "date": "2027-09-25", "price": 204800.0, "state": "KS"}, {"model": "911 Dakar", "year": 2024, "city": "New Orleans", "pay": "Lease", "date": "2027-10-01", "price": 271700.0, "state": "LA"}];
+const OPTIONS = {"models": ["718 Boxster", "718 Boxster GTS", "718 Cayman", "718 Cayman GT4 RS", "718 Cayman S", "718 Spyder RS", "911 Carrera", "911 Carrera Cabriolet", "911 Carrera GTS", "911 Carrera S", "911 Dakar", "911 GT3", "911 GT3 RS", "911 Targa 4", "911 Targa 4S", "911 Turbo", "911 Turbo S", "Cayenne", "Cayenne Coupe", "Cayenne E-Hybrid", "Cayenne S", "Cayenne Turbo", "Cayenne Turbo GT", "Macan", "Macan Electric", "Macan GTS", "Macan S", "Macan T", "Panamera", "Panamera 4", "Panamera 4 E-Hybrid", "Panamera 4S", "Panamera Turbo", "Panamera Turbo S", "Taycan", "Taycan 4S", "Taycan Cross Turismo", "Taycan GTS", "Taycan Turbo", "Taycan Turbo S"], "years": [2020, 2021, 2022, 2023, 2024, 2025, 2026], "cities": ["Albuquerque", "Anaheim", "Anchorage", "Arlington", "Atlanta", "Austin", "Bakersfield", "Boise", "Boston", "Buffalo", "Chandler", "Charlotte", "Chesapeake", "Chicago", "Cincinnati", "Cleveland", "Colorado Springs", "Columbus", "Corpus Christi", "Dallas", "Denver", "Detroit", "Durham", "Fort Worth", "Fresno", "Garland", "Greensboro", "Henderson", "Honolulu", "Houston", "Indianapolis", "Irvine", "Irving", "Jacksonville", "Jersey City", "Kansas City", "Laredo", "Las Vegas", "Lexington", "Lincoln", "Long Beach", "Los Angeles", "Lubbock", "Madison", "Mesa", "Miami", "Milwaukee", "Minneapolis", "Nashville", "New Orleans", "New York", "Newark", "Norfolk", "Oakland", "Omaha", "Orlando", "Philadelphia", "Phoenix", "Pittsburgh", "Plano", "Portland", "Raleigh", "Reno", "Riverside", "Sacramento", "Salt Lake City", "San Antonio", "San Diego", "San Francisco", "San Jose", "Scottsdale", "Seattle", "St. Louis", "Tampa", "Toledo", "Tucson", "Tulsa", "Virginia Beach", "Wichita"], "pays": ["ACH Payment", "Bank Transfer", "Cash", "Credit Card", "Crypto Payment", "Debit Card", "Financing", "Lease", "Wire Transfer"], "dateMin": "14/03/2024", "dateMax": "01/10/2027"};
+
+function uniq(arr){ return [...new Set(arr.filter(v => v !== null && v !== undefined && v !== ""))]; }
+function countBy(rows, key){
+  const m={}; rows.forEach(r=>{const v=r[key]; if(v!==null && v!==undefined) m[v]=(m[v]||0)+1}); return Object.entries(m).sort((a,b)=>b[1]-a[1]);
+}
+function money(v){ return new Intl.NumberFormat('pt-BR',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(v||0); }
+function fillSelect(id, values, label){
+  const el=document.getElementById(id);
+  el.innerHTML='<option value="">Todos</option>'+values.map(v=>`<option value="${String(v).replaceAll('"','&quot;')}">${v}</option>`).join('');
+}
+fillSelect('model', OPTIONS.models); fillSelect('year', OPTIONS.years); fillSelect('city', OPTIONS.cities); fillSelect('pay', OPTIONS.pays);
+document.querySelectorAll('select').forEach(s=>s.addEventListener('change', render));
+
+function filtered(){
+  const m=document.getElementById('model').value, y=document.getElementById('year').value,
+        c=document.getElementById('city').value, p=document.getElementById('pay').value;
+  return DATA.filter(r => (!m||r.model===m)&&(!y||String(r.year)===y)&&(!c||r.city===c)&&(!p||r.pay===p));
+}
+function barHTML(items, max, redFirst=false){
+  if(!items.length) return '<div class="empty">Sem dados para o recorte.</div>';
+  return items.map((x,i)=>`<div class="barrow"><div class="barlabel" title="${x[0]}">${x[0]}</div><div class="track"><div class="fill ${redFirst&&i===0?'red':''}" style="width:${(x[1]/max*100).toFixed(1)}%"></div></div><div class="num">${x[1]}</div></div>`).join('');
+}
+function renderStateSales(rows){
+  const stateCounts = countBy(rows, 'state');
+  drawStateChart(rows);
+
+  const top = stateCounts[0];
+  const second = stateCounts[1];
+  const title = document.querySelector('.card .title');
+  if (top) {
+    // O próprio ranking é a visualização principal; o insight 1 abaixo também usa o state líder.
+  }
+}
+
+
+function setupCanvas(canvas){
+  const rect = canvas.getBoundingClientRect();
+  const ratio = window.devicePixelRatio || 1;
+  canvas.width = Math.max(300, Math.floor(rect.width * ratio));
+  canvas.height = Math.max(220, Math.floor(rect.height * ratio));
+  const ctx = canvas.getContext('2d');
+  ctx.setTransform(ratio,0,0,ratio,0,0);
+  return {ctx,w:rect.width,h:rect.height};
+}
+
+function wrapLabel(text, maxChars){
+  const words=String(text).split(/\s+/);
+  const lines=[]; let line='';
+  words.forEach(word=>{
+    const test=line ? line+' '+word : word;
+    if(test.length>maxChars && line){ lines.push(line); line=word; } else { line=test; }
+  });
+  if(line) lines.push(line);
+  return lines.slice(0,2);
+}
+
+function drawHorizontalBars(canvasId, items, options={}){
+  const canvas=document.getElementById(canvasId);
+  const {ctx,w,h}=setupCanvas(canvas);
+  ctx.clearRect(0,0,w,h);
+
+  if(!items.length){
+    ctx.fillStyle='#777'; ctx.font='12px Arial, sans-serif'; ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText('Sem dados para o recorte.',w/2,h/2);
+    return;
+  }
+
+  // Layout: label area + adaptive bar area + dedicated value column.
+  const left=270, valueCol=62, gap=16, top=28, bottom=24;
+  const plotRight=w-valueCol;
+  const plotW=Math.max(110,plotRight-left-gap);
+  const rowH=(h-top-bottom)/items.length;
+
+  // Adaptive scale with a small headroom and rounded maximum for cleaner reading.
+  const rawMax=Math.max(1,...items.map(x=>Number(x[1])||0));
+  const step=rawMax<=5 ? 1 : rawMax<=20 ? 5 : rawMax<=50 ? 10 : rawMax<=100 ? 20 : Math.ceil(rawMax/5);
+  const adaptiveMax=Math.max(step,Math.ceil(rawMax/step)*step);
+
+  // Subtle axis/grid makes the scale explicit without visual clutter.
+  ctx.font='10px Arial, sans-serif';
+  ctx.textBaseline='bottom';
+  ctx.fillStyle='#8a8a86';
+  ctx.textAlign='left';
+  ctx.fillText('0',left,top-9);
+  ctx.textAlign='center';
+  ctx.fillText(String(Math.round(adaptiveMax/2)),left+plotW*.5,top-9);
+  ctx.textAlign='right';
+  ctx.fillText(String(adaptiveMax),left+plotW,top-9);
+
+  [0,.5,1].forEach(t=>{
+    const gx=left+plotW*t;
+    ctx.strokeStyle='#ececea'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(gx,top); ctx.lineTo(gx,h-bottom); ctx.stroke();
+  });
+
+  items.forEach(([label,value],i)=>{
+    const numeric=Number(value)||0;
+    const y=top+i*rowH+rowH*.5;
+
+    // Full/near-full label with two-line wrapping when needed.
+    ctx.fillStyle='#333';
+    ctx.font='11px Arial, sans-serif';
+    ctx.textAlign='left';
+    ctx.textBaseline='middle';
+    const lines=wrapLabel(label,34);
+    if(lines.length>1){
+      ctx.fillText(lines[0],8,y-6);
+      ctx.fillText(lines[1],8,y+7);
+    }else{
+      ctx.fillText(lines[0],8,y);
+    }
+
+    // Track + proportional bar using the adaptive scale.
+    const bw=plotW*(numeric/adaptiveMax);
+    ctx.fillStyle='#ececea';
+    ctx.fillRect(left,y-6,plotW,12);
+    ctx.fillStyle=(options.accentFirst && i===0)?'#d5001c':'#111';
+    ctx.fillRect(left,y-6,Math.max(3,bw),12);
+
+    // Dedicated value column: white background, strong contrast, never overlaps the bar.
+    ctx.fillStyle='#fff';
+    ctx.fillRect(plotRight+7,y-rowH*.36,valueCol-12,rowH*.72);
+    ctx.strokeStyle='#dededc'; ctx.lineWidth=1;
+    ctx.strokeRect(plotRight+7,y-rowH*.36,valueCol-12,rowH*.72);
+    ctx.fillStyle='#111';
+    ctx.font='700 12px Arial, sans-serif';
+    ctx.textAlign='right';
+    ctx.textBaseline='middle';
+    ctx.fillText(String(value),w-10,y);
+  });
+}
+
+function drawStateChart(rows){
+  const counts=countBy(rows,'state').slice(0,10);
+  drawHorizontalBars('stateCanvas',counts,{accentFirst:true});
+}
+
+function drawModelChart(rows){
+  drawHorizontalBars('modelCanvas',countBy(rows,'model').slice(0,8),{accentFirst:true});
+}
+
+function drawPayChart(rows){
+  const items=countBy(rows,'pay').slice(0,8);
+  const canvas=document.getElementById('payCanvas');
+  const {ctx,w,h}=setupCanvas(canvas);
+  ctx.clearRect(0,0,w,h);
+  const left=178, right=32, top=18, bottom=28;
+  const plotW=Math.max(80,w-left-right), rowH=Math.max(23,(h-top-bottom)/Math.max(items.length,1));
+  const max=Math.max(1,...items.map(x=>x[1]));
+  ctx.font='11px Arial, sans-serif';
+  ctx.textBaseline='middle';
+  items.forEach(([label,value],i)=>{
+    const y=top+i*rowH+rowH*.5;
+    ctx.fillStyle='#333';
+    ctx.textAlign='left';
+    // Exibe o nome completo da forma de pagamento.
+    ctx.fillText(String(label),8,y);
+    const bw=plotW*(value/max);
+    ctx.fillStyle='#ececea';
+    ctx.fillRect(left,y-5,plotW,10);
+    ctx.fillStyle=i===0?'#d5001c':'#111';
+    ctx.fillRect(left,y-5,Math.max(2,bw),10);
+    ctx.fillStyle='#555';
+    ctx.textAlign='right';
+    ctx.fillText(String(value),w-right,y);
+  });
+}
+
+function drawYearChart(rows){
+  const items=countBy(rows,'year').sort((a,b)=>Number(a[0])-Number(b[0]));
+  const canvas=document.getElementById('yearCanvas');
+  const {ctx,w,h}=setupCanvas(canvas);
+  ctx.clearRect(0,0,w,h);
+  const left=45,right=18,top=18,bottom=44;
+  const plotW=Math.max(100,w-left-right), plotH=Math.max(100,h-top-bottom);
+  const max=Math.max(1,...items.map(x=>x[1]));
+  // grid
+  ctx.font='10px Arial, sans-serif';
+  ctx.textAlign='right';
+  ctx.textBaseline='middle';
+  for(let g=0;g<=4;g++){
+    const val=Math.round(max*g/4);
+    const y=top+plotH-(plotH*g/4);
+    ctx.strokeStyle='#e7e7e5'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(left,y); ctx.lineTo(w-right,y); ctx.stroke();
+    ctx.fillStyle='#777'; ctx.fillText(String(val),left-8,y);
+  }
+  const slot=plotW/Math.max(items.length,1);
+  items.forEach(([year,value],i)=>{
+    const barW=Math.min(48,slot*.62);
+    const x=left+i*slot+(slot-barW)/2;
+    const bh=plotH*(value/max);
+    const y=top+plotH-bh;
+    ctx.fillStyle=i===items.length-1?'#d5001c':'#111';
+    ctx.fillRect(x,y,barW,bh);
+    ctx.fillStyle='#444';
+    ctx.textAlign='center'; ctx.textBaseline='top';
+    ctx.fillText(String(year),x+barW/2,h-bottom+10);
+    ctx.fillStyle='#555'; ctx.textBaseline='bottom';
+    ctx.fillText(String(value),x+barW/2,y-5);
+  });
+}
+
+function render(){
+  const rows=filtered();
+  renderStateSales(rows);
+  const modelCounts=countBy(rows,'model'), yearCounts=countBy(rows,'year'), payCounts=countBy(rows,'pay'), cityCounts=countBy(rows,'city');
+  const prices=rows.map(r=>r.price).filter(v=>typeof v==='number');
+  document.getElementById('kpiSales').textContent=rows.length;
+  document.getElementById('kpiSalesSub').textContent=`de ${DATA.length} registros da base`;
+  document.getElementById('kpiModel').textContent=modelCounts[0]?.[0] || '—';
+  document.getElementById('kpiModelSub').textContent=modelCounts[0] ? `${modelCounts[0][1]} unidade(s)` : '—';
+  document.getElementById('kpiYear').textContent=yearCounts[0]?.[0] || '—';
+  document.getElementById('kpiYearSub').textContent=yearCounts[0] ? `${yearCounts[0][1]} unidade(s)` : '—';
+  document.getElementById('kpiTicket').textContent=prices.length ? money(prices.reduce((a,b)=>a+b,0)/prices.length) : '—';
+
+  drawModelChart(rows);
+  drawYearChart(rows);
+  drawPayChart(rows);
+
+  const topCities=cityCounts.slice(0,8);
+  let table='<table class="citytable"><thead><tr><th>Cidade</th><th>Modelo líder</th><th>Vendas</th></tr></thead><tbody>';
+  topCities.forEach(([city,n])=>{
+    const cityRows=rows.filter(r=>r.city===city);
+    const top=countBy(cityRows,'model')[0];
+    table+=`<tr><td>${city}</td><td><span class="pill">${top?.[0]||'—'}</span></td><td>${n}</td></tr>`;
+  });
+  table+='</tbody></table>';
+  document.getElementById('cityTable').innerHTML=topCities.length?table:'<div class="empty">Sem dados para o recorte.</div>';
+
+  const topCity=cityCounts[0], topModel=modelCounts[0], topYear=yearCounts.sort((a,b)=>b[1]-a[1])[0];
+  const stateCounts=countBy(rows,'state');
+  const topState=stateCounts[0];
+  document.getElementById('ins1Title').textContent=topState ? `${topState[0]} lidera com ${topState[1]} venda(s)` : 'Sem concentração estadual';
+  document.getElementById('ins1Text').textContent=topState ? `O estado concentra ${((topState[1]/Math.max(1,rows.length))*100).toFixed(1)}% das vendas filtradas. Use os filtros de modelo e cidade para descobrir o mix por praça.` : 'Ajuste os filtros para encontrar uma concentração regional.';
+  document.getElementById('ins2Title').textContent=topModel ? `${topModel[0]} lidera o mix` : 'Sem líder';
+  document.getElementById('ins2Text').textContent=topModel ? `${topModel[1]} unidade(s), equivalente a ${((topModel[1]/Math.max(1,rows.length))*100).toFixed(1)}% das vendas filtradas.` : 'Ajuste os filtros para encontrar o modelo dominante.';
+  document.getElementById('ins3Title').textContent=topYear ? `Model Year ${topYear[0]}` : 'Sem ano dominante';
+  document.getElementById('ins3Text').textContent=topYear ? `${topYear[1]} unidade(s) no recorte. O ranking considera o ano de modelo, não a data de venda.` : 'Ajuste os filtros para analisar a distribuição temporal.';
+
+  const invalidAll=DATA.filter(r=>!r.date).length;
+  const validFiltered=rows.filter(r=>r.date).length;
+  document.getElementById('quality').textContent=`Qualidade temporal: ${invalidAll} de ${DATA.length} registros têm SaleDateSanitized = INVALID. A análise de período considera somente ${validFiltered} venda(s) com data válida no recorte. Período válido da base: ${OPTIONS.dateMin} a ${OPTIONS.dateMax}.`;
+}
+render();
+
+let resizeTimer;
+window.addEventListener('resize',()=>{
+  clearTimeout(resizeTimer);
+  resizeTimer=setTimeout(()=>render(),120);
+});
+</script>
+</body>
+</html>
