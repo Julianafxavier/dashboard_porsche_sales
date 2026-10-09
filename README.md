@@ -1,4 +1,5 @@
 Entrega do Desafio de Projeto - Criando uma dashboard da Porsche com Agentes de IA
+
 Nesse projeto foi criado uma dashboard interativa a partir de uma planilha com 100 vendas da posche, utilizando o CHATGPT foi 
 pedido uma Dashboard em HTML no canvas, com filtros e com as perguntas de negócios:
 
